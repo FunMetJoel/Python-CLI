@@ -1,13 +1,13 @@
 from enum import Enum
 
-class DataTypes(Enum):
+class DataType(Enum):
     STRING = "str"
     INTEGER = "int"
     FLOAT = "float"
     BOOLEAN = "bool"
 
 class Parameter():
-    def __init__(self, name:str, description:str, dataType:DataTypes = DataTypes.STRING):
+    def __init__(self, name:str, description:str, dataType:DataType = DataType.STRING):
         self.name = name
         self.description = description
         self.dataType = dataType
@@ -19,8 +19,8 @@ class Command():
         self.function = function
         self.params = params
 
-    def run(self):
-        self.function(self.params)
+    def run(self, params):
+        self.function(params)
 
     def helpCommand(self):
         print(f"{self.name} - {self.description}")
@@ -64,7 +64,7 @@ class CLI():
     def runCommand(self, command, params):
         for cmd in self.commands:
             if cmd.name == command:
-                cmd.run()
+                cmd.run(params)
                 return
         print(f"Command '{command}' not found")
 
@@ -74,7 +74,7 @@ if __name__ == '__main__':
     def test(input):
         print("Functie is gerunt:", input)
 
-    cmd = Command("TEST", "test command", test, [Parameter("paramTest", "test parameter", DataTypes.STRING)])
+    cmd = Command("TEST", "test command", test, [Parameter("paramTest", "test parameter", DataType.STRING)])
     
     cli = CLI(commands=[cmd])
     cli.printHeader()
