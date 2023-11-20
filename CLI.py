@@ -19,8 +19,56 @@ class Command():
         self.function = function
         self.params = params
 
+    def checkParams(self, params):
+        for i in range(len(params)):
+            if self.params[i].dataType == DataType.STRING:
+                continue
+            elif self.params[i].dataType == DataType.INTEGER:
+                try:
+                    params[i] = int(params[i])
+                except ValueError:
+                    print(f"Parameter '{params[i]}' is not a valid integer")
+                    return False
+            elif self.params[i].dataType == DataType.FLOAT:
+                try:
+                    params[i] = float(params[i])
+                except ValueError:
+                    print(f"Parameter '{params[i]}' is not a valid float")
+                    return False
+            elif self.params[i].dataType == DataType.BOOLEAN:
+                if params[i].lower() == "true":
+                    params[i] = True
+                elif params[i].lower() == "false":
+                    params[i] = False
+                else:
+                    print(f"Parameter '{params[i]}' is not a valid boolean")
+                    return False
+        return True
+
+    def parceParams(self, params):
+        for i in range(len(params)):
+            if self.params[i].dataType == DataType.STRING:
+                continue
+            elif self.params[i].dataType == DataType.INTEGER:
+                params[i] = int(params[i])
+            elif self.params[i].dataType == DataType.FLOAT:
+                params[i] = float(params[i])
+            elif self.params[i].dataType == DataType.BOOLEAN:
+                if params[i].lower() == "true":
+                    params[i] = True
+                elif params[i].lower() == "false":
+                    params[i] = False
+        return params
+
     def run(self, params):
-        self.function(params)
+        if len(params) != len(self.params):
+            print(f"Wrong number of parameters for command '{self.name}'")
+            return
+        
+        if not self.checkParams(params):
+            return
+        
+        self.function(self.parceParams(params))
 
     def helpCommand(self):
         print(f"{self.name} - {self.description}")
@@ -67,16 +115,3 @@ class CLI():
                 cmd.run(params)
                 return
         print(f"Command '{command}' not found")
-
-
-if __name__ == '__main__':
-
-    def test(input):
-        print("Functie is gerunt:", input)
-
-    cmd = Command("TEST", "test command", test, [Parameter("paramTest", "test parameter", DataType.STRING)])
-    
-    cli = CLI(commands=[cmd])
-    cli.printHeader()
-    while True:
-        cli.newCommand()
