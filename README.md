@@ -2,7 +2,9 @@
  A Command Line Interface library for Python
 
 ## Installation:
-To use the library, just download the CLI.py file and drop it in to you'r working folder
+To use the library, just download the `CLI.py` file and drop it in to you'r working folder
+
+*When using microPython, copy the `CLI.py` file from the microPython folder*
 
 ## How to use:
 

@@ -1,0 +1,138 @@
+class DataType():
+    STRING = "str"
+    INTEGER = "int"
+    FLOAT = "float"
+    BOOLEAN = "bool"
+
+class Parameter():
+    def __init__(self, name:str, description:str, dataType:str = DataType.STRING):
+        self.name = name
+        self.description = description
+        self.dataType = dataType
+
+class Command():
+    def __init__(self, name:str, description:str, function, params:list = []):
+        self.name = name
+        self.description = description
+        self.function = function
+        self.params = params
+
+    def checkParams(self, params):
+        for i in range(len(params)):
+            if self.params[i].dataType == DataType.STRING:
+                continue
+            elif self.params[i].dataType == DataType.INTEGER:
+                try:
+                    params[i] = int(params[i])
+                except ValueError:
+                    print("Parameter '", params[i], "' is not a valid integer")
+                    return False
+            elif self.params[i].dataType == DataType.FLOAT:
+                try:
+                    params[i] = float(params[i])
+                except ValueError:
+                    print("Parameter '", params[i], "' is not a valid float")
+                    return False
+            elif self.params[i].dataType == DataType.BOOLEAN:
+                if params[i].lower() == "true":
+                    params[i] = True
+                elif params[i].lower() == "false":
+                    params[i] = False
+                else:
+                    print("Parameter '",params[i],"' is not a valid boolean")
+                    return False
+        return True
+
+    def parceParams(self, params):
+        for i in range(len(params)):
+            if self.params[i].dataType == DataType.STRING:
+                continue
+            elif self.params[i].dataType == DataType.INTEGER:
+                params[i] = int(params[i])
+            elif self.params[i].dataType == DataType.FLOAT:
+                params[i] = float(params[i])
+            elif self.params[i].dataType == DataType.BOOLEAN:
+                if params[i].lower() == "true":
+                    params[i] = True
+                elif params[i].lower() == "false":
+                    params[i] = False
+        return params
+
+    def run(self, params):
+        if len(params) != len(self.params):
+            print("Wrong number of parameters for command '",self.name,"'")
+            return
+        
+        if not self.checkParams(params):
+            return
+        
+        self.function(self.parceParams(params))
+
+    def helpCommand(self):
+        print(self.name," - ", self.description)
+        for param in self.params:
+            print("\t",param.name," - ",param.description, "(",param.dataType,")")
+
+class CLI():
+    def __init__(self, CLIname:str = "CLI", CLIdescription:str = "Command Line Interface", commands:list = []):
+        self.commands = commands
+        self.CLIname = CLIname
+        self.CLIdescription =  CLIdescription
+        self.header = "\n--",CLIname,"--\n",CLIdescription,"\n"
+
+    def printHeader(self):
+        print(self.header)
+
+    def newCommand(self):
+        self.parceCommand(input(">> "))
+    
+    def parceCommand(self, command):
+        basecommand = command.split(" ")[0]
+        params = command.split(" ")[1:]
+        if basecommand == "help":
+            self.helpCommand(params)
+        else:
+            self.runCommand(basecommand, params)
+    
+    def helpCommand(self, params):
+        if len(params) == 0:
+            print(self.header)
+            print("Commands:")
+            for cmd in self.commands:
+                print("\t",cmd.name," - ",cmd.description)
+        else:
+            for cmd in self.commands:
+                if cmd.name == params[0]:
+                    cmd.helpCommand()
+                    return
+            print("Command '",params[0],"' not found")
+
+    def runCommand(self, command, params):
+        for cmd in self.commands:
+            if cmd.name == command:
+                cmd.run(params)
+                return
+        print("Command '",command,"' not found")
+
+# How to use:
+# from CLI import CLI, Command, Parameter, DataType
+# 
+# def testFunction(params):
+#     print("testFunction")     
+#     for param in params:
+#         print(f"\t{param}")
+#
+# command1 = Command("test1", "test1 description", testFunction, [Parameter("param1", "param1 description", DataType.STRING), Parameter("param2", "param2 description", DataType.INTEGER)])
+#
+# def testFunction2(params):
+#     print("testFunction2")
+#     for param in params:
+#         print(f"\t{param.name} - {param.dataType.value} - {param.value}")
+#
+# command2 = Command("test2", "test2 description", testFunction2, [Parameter("param1", "param1 description", DataType.STRING), Parameter("param2", "param2 description", DataType.INTEGER)])
+#
+# cli = CLI("Test CLI", "Test CLI description", [command1, command2])
+# cli.printHeader()
+#
+# while True:
+#     cli.newCommand()
