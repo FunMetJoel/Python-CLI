@@ -9,6 +9,7 @@ python:
 
 script:
   - python -m unittest tests/CLI_tests.py
+  - pip install urllib3==1.26.6
 
 deploy:
   provider: pypi
