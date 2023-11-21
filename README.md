@@ -2,9 +2,12 @@
  A Command Line Interface library for Python
 
 ## Installation:
-To use the library, just download the `CLI.py` file and drop it in to you'r working folder
+To use the library, just download the `CLI.py` file in custCLI and drop it in to you'r working folder
 
 *When using microPython, copy the `CLI.py` file from the microPython folder*
+
+Or install the library using pip
+```pip install custCLI```
 
 ## How to use:
 
