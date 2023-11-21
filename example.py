@@ -1,4 +1,4 @@
-from CLI import CLI, Command, Parameter, DataType
+from custCLI.CLI import CLI, Command, Parameter, DataType
 
 def testFunction(params):
     print("testFunction")
