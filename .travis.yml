@@ -7,8 +7,8 @@ python:
 #   - python --version
 #   - pip install -U pip
 
-# script:
-#   - python -m unittest tests/multiplication_tests.py
+script:
+  - python -m unittest tests/CLI_tests.py
 
 deploy:
   provider: pypi

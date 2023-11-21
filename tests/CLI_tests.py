@@ -1,5 +1,5 @@
 import unittest
-from custCLI import CLI, Command, Parameter, DataType
+from custCLI.CLI import CLI, Command, Parameter, DataType
 
 
 class CommandTestCase(unittest.TestCase):
