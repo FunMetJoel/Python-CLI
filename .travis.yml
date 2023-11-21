@@ -1,11 +1,11 @@
-language: python
-python:
-  - 3.9
+# language: python
+# python:
+#   - 3.9
 
-# Update pip to the latest version
-before_install:
-  - python --version
-  - pip install -U pip
+# # Update pip to the latest version
+# before_install:
+#   - python --version
+#   - pip install -U pip
 
 # script:
 #   - python -m unittest tests/multiplication_tests.py
