@@ -1,3 +1,8 @@
+"""
+This is a python library for creating a CLI with custom commands and parameters
+Create by FunMetJoel
+"""
+
 from enum import Enum
 
 class DataType(Enum):
