@@ -1,4 +1,4 @@
-from custCLI.CLI import CLI, Command, Parameter, DataType
+from CLI import CLI, Command, Parameter, DataType
 
 def addFunction(params):
     print("Adding " + str(params[0]) + ", and " + str(params[1]) + " gives " + str(params[0] + params[1]))

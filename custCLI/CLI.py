@@ -4,6 +4,7 @@ Create by FunMetJoel
 """
 
 from enum import Enum
+import re
 
 class DataType(Enum):
     STRING = "str"
@@ -112,10 +113,21 @@ class CLI():
 
     def newCommand(self):
         self.parceCommand(input(">> "))
+
+    def splitParams(self, command):
+        params = []
+        for param in re.findall(r'\"(.+?)\"|(\S+)', command):
+            if param[0] != "":
+                params.append(param[0])
+            else:
+                params.append(param[1])
+        return params
     
     def parceCommand(self, command):
-        basecommand = command.split(" ")[0]
-        params = command.split(" ")[1:]
+        basecommand = command.split(" ",1)[0]
+        params = []
+        if len(command.split(" ")) > 1:
+            params = self.splitParams(command.split(" ",1)[1])
         if basecommand == "help":
             self.helpCommand(params)
         else:

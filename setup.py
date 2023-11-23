@@ -14,7 +14,7 @@ with open(path.join(HERE, 'README.md'), encoding='utf-8') as f:
 # This call to setup() does all the work
 setup(
     name="custCLI",
-    version="0.2.1",
+    version="0.2.2",
     description="A python library for creating a CLI with custom commands and parameters",
     long_description=long_description,
     long_description_content_type="text/markdown",
