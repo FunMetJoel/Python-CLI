@@ -12,10 +12,11 @@ class DataType(Enum):
     BOOLEAN = "bool"
 
 class Parameter():
-    def __init__(self, name:str, description:str, dataType:DataType = DataType.STRING):
+    def __init__(self, name:str, description:str, dataType:DataType = DataType.STRING, defaultValue = None):
         self.name = name
         self.description = description
         self.dataType = dataType
+        self.defaultValue = defaultValue
 
 class Command():
     def __init__(self, name:str, description:str, function, params:list[Parameter] = []):
@@ -25,6 +26,24 @@ class Command():
         self.params = params
 
     def checkParams(self, params):
+        if not self.checkParamLength(params):
+            return False
+        if not self.checkParamDatatypes(params):
+            return False
+        return True
+    
+    def checkParamLength(self, params):
+        minParams = sum(1 for param in self.params if param.defaultValue == None)
+        maxParams = len(self.params)
+        if len(params) < minParams:
+            print(f"Not enouth parameters for command '{self.name}'")
+            return False
+        if len(params) > maxParams:
+            print(f"Too many parameters for command '{self.name}'")
+            return False
+        return True
+
+    def checkParamDatatypes(self, params):
         for i in range(len(params)):
             if self.params[i].dataType == DataType.STRING:
                 continue
@@ -66,14 +85,15 @@ class Command():
         return params
 
     def run(self, params):
-        if len(params) != len(self.params):
-            print(f"Wrong number of parameters for command '{self.name}'")
-            return
-        
         if not self.checkParams(params):
             return
         
-        self.function(self.parceParams(params))
+        nParams = self.parceParams(params)
+
+        for i in range(len(self.params)):
+            if i >= len(nParams):
+                nParams.append(self.params[i].defaultValue)
+        self.function(nParams)
 
     def helpCommand(self):
         print(f"{self.name} - {self.description}")
