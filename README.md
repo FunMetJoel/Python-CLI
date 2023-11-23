@@ -37,6 +37,10 @@ pip install custCLI
                     Parameter("param2", "param2 description", DataType.INTEGER)]
                    )
      ```
+     - To add a default value for a parameter, just add it to the end
+        ```python
+        Parameter("param2", "param2 description", DataType.STRING, "TheDefaultValue")
+        ```
 
 4. Optionally, define more custom functions and create additional `Command` instances.
 
