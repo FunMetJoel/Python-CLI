@@ -18,7 +18,7 @@ pip install custCLI
 
 1. Import the necessary classes and enums:
    ```python
-   from CLI import CLI, Command, Parameter, DataType
+   from custCLI import CLI, Command, Parameter, DataType
    ```
 2. Define your custom functions that will be executed when a command is called. For example:
     ```python
@@ -30,12 +30,15 @@ pip install custCLI
 
 3. Create instances of the `Command` class for each command you want to add. For example:
      ```python
-     command1 = Command("test1", 
-                   "test1 description", 
-                   testFunction, 
-                   [Parameter("param1", "param1 description",DataType.STRING), 
-                    Parameter("param2", "param2 description", DataType.INTEGER)]
-                   )
+     command1 = Command(
+        "test1", 
+        "test1 description", 
+        testFunction, 
+        [
+            Parameter("param1", "param1 description",DataType.STRING), 
+            Parameter("param2", "param2 description", DataType.INTEGER)
+        ]
+    )
      ```
      - To add a default value for a parameter, just add it to the end
         ```python
