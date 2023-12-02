@@ -19,12 +19,19 @@ class Parameter():
         self.dataType = dataType
         self.defaultValue = defaultValue
 
+class Option():
+    def __init__(self, name:str, aliasses:list, description:str):
+        self.name = name
+        self.aliasses = aliasses
+        self.description = description
+
 class Command():
-    def __init__(self, name:str, description:str, function, params:list[Parameter] = []):
+    def __init__(self, name:str, description:str, function, params:list = [], options:list = []):
         self.name = name
         self.description = description
         self.function = function
         self.params = params
+        self.options = options
 
     def checkParams(self, params):
         if not self.checkParamLength(params):
@@ -114,20 +121,26 @@ class CLI():
     def newCommand(self):
         self.parceCommand(input(">> "))
 
-    def splitParams(self, command):
+    @staticmethod
+    def splitArguments(command):
         params = []
-        for param in re.findall(r'\"(.+?)\"|(\S+)', command):
-            if param[0] != "":
-                params.append(param[0])
+        options = []
+        for argument in re.findall(r'\"(.+?)\"|(\S+)', command):
+            print(argument)
+            if argument[0] != "":
+                params.append(argument[0])
+                continue
+            if argument[1][0] == "-":
+                options.append(argument[1])
             else:
-                params.append(param[1])
-        return params
+                params.append(argument[1])
+        return params, options
     
     def parceCommand(self, command):
         basecommand = command.split(" ",1)[0]
-        params = []
+        params,options = [],[]
         if len(command.split(" ")) > 1:
-            params = self.splitParams(command.split(" ",1)[1])
+            params, options = CLI.splitArguments(command.split(" ",1)[1])
         if basecommand == "help":
             self.helpCommand(params)
         else:
@@ -175,3 +188,4 @@ class CLI():
 #
 # while True:
 #     cli.newCommand()
+
