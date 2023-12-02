@@ -1,9 +1,12 @@
-from custCLI.CLI import CLI, Command, Parameter, DataType
+from custCLI.CLI import CLI, Command, Parameter, Option, DataType
 
-def addFunction(params):
-    print(f"Adding {params[0]} and {params[1]} gives {params[0] + params[1]}")
+def addFunction(params,options):
+    if(options.count("-v") > 0):
+        print(f"Adding {params[0]} and {params[1]} gives {params[0] + params[1]}")
+    else:
+        print(f"{params[0] + params[1]}")
 
-addCommand = Command("add", "Adds two numbers", addFunction, [Parameter("num1", "First number", DataType.FLOAT), Parameter("num2", "Second number", DataType.FLOAT)])
+addCommand = Command("add", "Adds two numbers", addFunction, [Parameter("num1", "First number", DataType.FLOAT), Parameter("num2", "Second number", DataType.FLOAT)], [Option("-v", ["-verbose"],"Verbose")])
 
 def subFunction(params):
     print(f"Subtracting {params[0]} and {params[1]} gives {params[0] - params[1]}")

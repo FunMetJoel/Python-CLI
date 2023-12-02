@@ -91,22 +91,55 @@ class Command():
                 elif params[i].lower() == "false":
                     params[i] = False
         return params
+    
+    def checkOptions(self, options):
+        for option in options:
+            for opt in self.options:
+                if option in (opt.aliasses + [opt.name]):
+                    break
+            else:
+                print(f"Option '{option}' is not a valid option for command '{self.name}'")
+                return False
+        return True
+    
+    def parceOptions(self, options):
+        nOptions = []
+        for option in options:
+            for opt in self.options:
+                if option in (opt.aliasses + [opt.name]):
+                    nOptions.append(opt.name)
+                    break
+        return nOptions
 
-    def run(self, params):
+    def run(self, params, options):
         if not self.checkParams(params):
             return
         
         nParams = self.parceParams(params)
 
+        if not self.checkOptions(options):
+            return
+        
+        nOptions = self.parceOptions(options)
+
+        for option in options:
+            for opt in self.options:
+                if option in opt.aliasses:
+                    nOptions.append(opt.name)
+                    break
+
         for i in range(len(self.params)):
             if i >= len(nParams):
                 nParams.append(self.params[i].defaultValue)
-        self.function(nParams)
+        self.function(nParams, nOptions)
 
     def helpCommand(self):
-        print(f"{self.name} - {self.description}")
+        print(f"{self.name} ~ {self.description}")
         for param in self.params:
-            print(f"\t{param.name} - {param.description} ({param.dataType.value})")
+            print(f"\t{param.name} ~ {param.description} ({param.dataType.value})")
+        print("Options:")
+        for option in self.options:
+            print(f"\t{option.name} ~ {option.description}")
 
 class CLI():
     def __init__(self, CLIname:str = "CLI", CLIdescription:str = "Command Line Interface", commands:list[Command] = []):
@@ -126,7 +159,6 @@ class CLI():
         params = []
         options = []
         for argument in re.findall(r'\"(.+?)\"|(\S+)', command):
-            print(argument)
             if argument[0] != "":
                 params.append(argument[0])
                 continue
@@ -138,20 +170,21 @@ class CLI():
     
     def parceCommand(self, command):
         basecommand = command.split(" ",1)[0]
-        params,options = [],[]
+        params = []
+        options = []
         if len(command.split(" ")) > 1:
             params, options = CLI.splitArguments(command.split(" ",1)[1])
         if basecommand == "help":
-            self.helpCommand(params)
+            self.helpCommand(params, options)
         else:
-            self.runCommand(basecommand, params)
+            self.runCommand(basecommand, params, options)
     
-    def helpCommand(self, params):
+    def helpCommand(self, params, options):
         if len(params) == 0:
             print(self.header)
             print("Commands:")
             for cmd in self.commands:
-                print(f"\t{cmd.name} - {cmd.description}")
+                print(f"\t{cmd.name} ~ {cmd.description}")
         else:
             for cmd in self.commands:
                 if cmd.name == params[0]:
@@ -159,10 +192,10 @@ class CLI():
                     return
             print(f"Command '{params[0]}' not found")
 
-    def runCommand(self, command, params):
+    def runCommand(self, command, params, options):
         for cmd in self.commands:
             if cmd.name == command:
-                cmd.run(params)
+                cmd.run(params, options)
                 return
         print(f"Command '{command}' not found")
 
