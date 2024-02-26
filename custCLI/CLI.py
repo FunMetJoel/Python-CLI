@@ -20,10 +20,11 @@ class Parameter():
         self.defaultValue = defaultValue
 
 class Option():
-    def __init__(self, name:str, aliasses:list, description:str):
+    def __init__(self, name:str, aliasses:list, description:str, addedParams:list[Parameter] = []):
         self.name = name
         self.aliasses = aliasses
         self.description = description
+        self.addedParams = addedParams
 
 class Command():
     def __init__(self, name:str, description:str, function, params:list = [], options:list = []):

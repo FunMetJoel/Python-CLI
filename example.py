@@ -1,11 +1,36 @@
-from custCLI.CLI import CLI, Command, Parameter, DataType
+from custCLI.CLI import CLI, Command, Parameter, Option, DataType
 
-def testFunction(params):
-    print("testFunction")
-    for param in params:
-        print(f"\t{param}")
+cli = CLI(
+    "Test CLI", 
+    "Test CLI description"
+)
 
-command1 = Command("test1", "test1 description", testFunction, [Parameter("param1", "param1 description", DataType.STRING), Parameter("param2", "param2 description", DataType.INTEGER)])
+def addCommand(params, options):
+    if '-v' in options:
+        print(f"RUN addCommand with")
+        print(f"\tparams: {params}")
+        print(f"\toptions: {options}")
+
+    num1 = int(params[0])
+    num2 = int(params[1])
+    result = num1 + num2
+    if '-v' in options:
+        print(f"{num1} + {num2} = {result}")
+    else:
+        print(f"{result}")
+
+cli.commands.append( Command(
+    "add", 
+    "adds numbers together", 
+    addCommand, 
+    [
+        Parameter("param1", "param1 description", DataType.STRING), 
+        Parameter("param2", "param2 description", DataType.INTEGER)
+    ],
+    [
+        Option("-v", ["-verbose"], "Verbose")
+    ] 
+) )
 
 def testFunction2(params):
     print("testFunction2")
@@ -21,7 +46,6 @@ def testFunction3(params):
 
 command3 = Command("test3", "test3 description", testFunction3, [Parameter("param1", "param1 description", DataType.STRING), Parameter("param2", "param2 description", DataType.INTEGER)])
 
-cli = CLI("Test CLI", "Test CLI description", [command1, command2, command3])
 cli.printHeader()
 
 while True:
